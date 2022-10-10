@@ -1,53 +1,46 @@
-# Welcome to Remix!
+# Colmanag
 
-- [Remix Docs](https://remix.run/docs)
+A webapp to create and explore collections of items - books, movies, music, etc.
 
-## Development
+## Run locally (dev)
 
-From your terminal:
-
-```sh
-npm run dev
+```
+> npm run dev
+It runs `docker compose up`
 ```
 
-This starts your app in development mode, rebuilding assets on file changes.
+> Live reload works with this method. `node_modules` and `dist` are created in a project folder. While the container is running, new npm modules can only be installed with `docker compose run web npm i <package>`
 
-## Deployment
+## Deploy to heroku
 
-First, build your app for production:
+```
+1. Create a new app on heroku
 
-```sh
-npm run build
+2. Login to heroku CLI
+> heroku login
+
+3. Add a heroku remote, so heroku CLI knows for which app to execute its commands. 
+> heroku git:remote -a <app_name>
 ```
 
-Then run the app in production mode:
+#### Automatic deploys when pushing to github
 
-```sh
-npm start
+```
+1. Tell heroku to build the app with docker:
+> heroku stack:set container
+
+2. In heroku dashboard, go to `Deploy` tab, select `Github`, connect the app to this repository
+
+3. Enable automatic deploys in a section below (`Enable Automatic Deploys` button)
 ```
 
-Now you'll need to pick a host to deploy it to.
+#### Quick deploy from a local machine
 
-### DIY
-
-If you're familiar with deploying node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `remix build`
-
-- `build/`
-- `public/build/`
-
-### Using a Template
-
-When you ran `npx create-remix@latest` there were a few choices for hosting. You can run that again to create a new project, then copy over your `app/` folder to the new project that's pre-configured for your target server.
-
-```sh
-cd ..
-# create a new project, and pick a pre-configured host
-npx create-remix@latest
-cd my-new-remix-app
-# remove the new project's app (not the old one!)
-rm -rf app
-# copy your app over
-cp -R ../my-old-remix-app/app app
 ```
+> npm run deploy
+It runs `heroku container:push web && heroku container:release web`
+```
+
+> This method is usually faster than automatic deploys, since, when building the docker image on a local machine, docker caches most of the steps. But when heroku builts the image itself, it builds it from scratch.
+
+
