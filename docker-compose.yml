@@ -1,0 +1,39 @@
+services:
+  web:
+    build:
+      context: .
+      target: base
+    command: sh -c "npm install && npx remix dev"
+    depends_on:
+      - db
+      - search
+    ports:
+      - 3000:3000
+      - 8002:8002
+    environment:
+      - SEARCHBOX_URL=https://elastic:elastic@search:9200
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+    volumes:
+      - .:/code
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - db:/var/lib/postgresql/data
+  search:
+    image: elasticsearch:7.17.6
+    ports:
+      - 9200:9200
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - xpack.security.enabled=false
+    volumes:
+      - search:/usr/share/elasticsearch/data
+volumes:
+  db:
+  search:

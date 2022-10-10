@@ -1,0 +1,9 @@
+setup:
+  addons:
+    - plan: heroku-postgresql:hobby-dev
+    - plan: searchbox:starter
+build:
+  docker:
+    web:
+      dockerfile: Dockerfile
+      target: prod
